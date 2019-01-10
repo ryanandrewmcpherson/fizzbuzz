@@ -12,9 +12,32 @@ public class FizzBuzzGame {
 
 			System.out.println("Welcome to FizzBuzz!");
 			System.out.println("FizzBuzz is a Guessing Game.");
-			System.out.println("Please Enter a positive Number to Begin:");
+			System.out.println("Please Enter a positive Number to Begin or Enter Q to quit:");
 			Scanner input = new Scanner(System.in);
-			int seedNumber = input.nextInt();
+			int seedNumber = 0;
+			int numInvalidResponses = 1;
+
+			while (seedNumber == 0) {
+
+				if (input.hasNextInt()) {
+					seedNumber = input.nextInt();
+					if (seedNumber < 0) {
+						if (numInvalidResponses > 3) {
+							System.out.println("Quit Messing Around!");
+						}
+						System.out.println("Please enter a  whole number value great than 0!");
+						seedNumber = 0;
+						numInvalidResponses++;
+					}
+				} else if (input.next().equalsIgnoreCase("q")) {
+					System.exit(0);
+				} else if (!input.nextLine().equalsIgnoreCase("q")) {
+					if (numInvalidResponses >= 3)
+						System.out.println("Quit Messing Around!");
+					System.out.println("Please enter a whole number value greater than 0!");
+					numInvalidResponses++;
+				}
+			}
 			int fizzValue = (int) (Math.random() * seedNumber + 1);
 			int buzzValue = (int) (Math.random() * 2 * seedNumber + 1);
 			boolean isFizzBuzz = false;
@@ -27,20 +50,35 @@ public class FizzBuzzGame {
 			System.out.println("Please press enter after each guess!");
 			System.out.println("Press Q to quit at any time!");
 			System.out.println("You may start guessing now!");
+			
+			numInvalidResponses = 1;
 
 			while (!isFizzBuzz) {
 				int numEntered = 0;
 				if (input.hasNextInt()) {
 					numEntered = input.nextInt();
+					if (numEntered < 0) {
+						if (numInvalidResponses >= 3) {
+							System.out.println("Quit Messing Around!");
+						}
+						System.out.println("Please enter a  whole number value great than 0!");
+						seedNumber = 0;
+						numInvalidResponses++;
+						continue;
+					}
 					FizzBuzz fizzBuzzGame = new FizzBuzz();
 					System.out.println(fizzBuzzGame.fizzBuzz(numEntered, fizzValue, buzzValue));
 					if (fizzBuzzGame.fizzBuzz(numEntered, fizzValue, buzzValue).equals("FizzBuzz!")) {
 						isFizzBuzz = true;
 					}
-				} else if (input.hasNext() && input.next().equalsIgnoreCase("q")) {
+				} else if (input.next().equalsIgnoreCase("q")) {
 					System.exit(0);
-				} else {
-					System.out.print("Please Enter a Valid Guess or Press Q to quit!");
+				} else if (!input.nextLine().equalsIgnoreCase("q")) {
+					if (numInvalidResponses >= 3) {
+						System.out.println("Quit Messing Around!");
+					}
+					System.out.println("Please Enter a Valid Guess or Press Q to quit!");
+					numInvalidResponses++;
 				}
 
 			}
